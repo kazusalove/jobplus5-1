@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from jobplus.models import db, User, Company
+from jobplus.models import db, User, CompanyDetail
 from wtforms import StringField, PasswordField, SubmitField, ValidationError, BooleanField
 from wtforms.validators import Required, Length, Email, EqualTo
 
@@ -29,23 +29,23 @@ class UserRegisterForm(FlaskForm):
 
 
 class CompanyRegisterForm(FlaskForm):
-    company = StringField('Company name', validators=[Required(), Length(3, 24)])
+    companyname = StringField('Company name', validators=[Required(), Length(3, 24)])
     email = StringField('Email', validators=[Required(), Email()])
     password = PasswordField('Password', validators=[Required(), Length(6, 24)])
     repeat_password = PasswordField('Password again', validators=[Required(), EqualTo('password')])
     submit = SubmitField('Submit')
 
     def validate_company(self, field):
-        if Company.query.filter_by(company=field.data).first():
+        if CompanyDetail.query.filter_by(companyname=field.data).first():
             raise ValidationError('company name used')
 
     def validate_email(self, field):
-        if Company.query.filter_by(email=field.data).first():
+        if CompanyDetail.query.filter_by(email=field.data).first():
             raise ValidationError('email used')
 
-    def create_user(self):
-        company = Company()
-        company.company = self.company.data
+    def create_company(self):
+        company = CompanyDetail()
+        company.companyname = self.companyname.data
         company.email = self.email.data
         company.password = self.password.data
         db.session.add(company)
@@ -53,7 +53,7 @@ class CompanyRegisterForm(FlaskForm):
         return company
 
 class LoginForm(FlaskForm):
-    email = StringField('Email', Validators=[Required(), Email()])
+    email = StringField('Email', validators=[Required(), Email()])
     password = PasswordField('Password', validators=[Required(), Length(6, 24)])
     remember_me = BooleanField('Remember me')
     submit = SubmitField('Submit')

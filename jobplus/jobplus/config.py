@@ -1,5 +1,5 @@
 class BaseConfig(object):
-    pass
+    SECRET_KEY = 'makesure to set a very secret key'
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
