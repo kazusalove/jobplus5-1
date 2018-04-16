@@ -20,8 +20,11 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="/">Jobs<span class="sr-only">(current)</span></a></li>
-          <li><a href="#">Companys</a></li>
+            <li class="{% if active == 'job' %}active{% endif %}"><a href="#">Jobs<span class="sr-only">(current)</span></a></li>
+            <li class="{% if active == 'company' %}active{% endif %}"><a href="#">Companys<span class="sr-only">(current)</span></a></li>
+            {% if current_user.is_authenticated and current_user.is_admin %}
+            <li><a href="#">control</a></li>
+            {% endif %}
         </ul>
         <ul class="nav navbar-nav navbar-right">
           {% if not current_user.is_authenticated %}  
@@ -30,7 +33,6 @@
             <li><a href="{{ url_for('front.login') }}">Login</a></li>
           {% else %}
             <li class="dropdown">
-              <!-- 此处有个问题没解决 没有实现判断公司和用户 -->
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ current_user.username }}<span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="#">my page</a></li>
@@ -43,6 +45,7 @@
         </div>
       </div>
     </nav>
+    {% block head %}{% endblock %}
     <div class="container">
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -55,7 +58,53 @@
         {% endif %}
       {% endwith %}
       {% block body %}{% endblock %}
-      {% block footer %}{% endblock %}
+      {% block footer %}
+      <footer class="footer ">
+        <div class="container">
+          <div class="row footer-top">
+            <div class="col-md-6 col-lg-6">
+              <h4>
+                <img src="https://static.shiyanlou.com/img/logo-white.png">
+              </h4>
+              <p>help us find jobs</p>
+            </div>
+            <div class="col-md-6  col-lg-5 col-lg-offset-1">
+              <div class="row about">
+                <div class="col-sm-3">
+                  <h4>abort</h4>
+                  <ul class="list-unstyled">
+                    <li><a href="/about/">Abort Us</a></li>
+                    <li><a href="/ad/">Advertisement</a></li>
+                    <li><a href="/links/">Friendly Link</a></li>
+                    <li><a href="/hr/">Recruit</a></li>
+                  </ul>
+                </div>
+                <div class="col-sm-3">
+                  <h4>Contact Information</h4>
+                  <ul class="list-unstyled">
+                    <li><a href="#" title="jobplus-weibo" target="_blank">sina blog</a></li>
+                    <li><a href="mailto:admin@jobplus.com">email</a></li>
+                  </ul>
+                </div>
+                <div class="col-sm-2">
+                  <h4>Sponsor</h4>
+                  <ul class="list-unstyled">
+                    <li><a href="https://www.shiyanlou.com" target="_blank">shiyanlou</a></li>
+                  </ul>
+                </div>
+              </div>
+  
+            </div>
+          </div>
+          <hr/>
+          <div class="row footer-bottom">
+            <ul class="list-inline text-center">
+              <li>Copyright @2018-2019 jobplus</li><li><a href="http://www.miibeian.gov.cn/" target="_blank">ICP number</a></li>
+            </ul>
+          </div>
+        </div>
+      </footer>
+      {% endblock %}
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
